@@ -5,7 +5,9 @@ import HomepageCards from "@/components/HomepageCards";
 export default function Home() {
   return (
     <div>
-      <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-900">Weather App</h1>
+      <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-200">
+        Weather App
+      </h1>
       <HomepageCards />
       <FavouriteLocationCard />
     </div>

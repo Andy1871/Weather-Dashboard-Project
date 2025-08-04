@@ -1,7 +1,5 @@
 import {
   Card,
-  CardAction,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -11,10 +9,13 @@ import {
 export default function HomepageCards() {
   return (
     <div className="flex gap-5 flex-row justify-between py-5">
-      <Card className="w-full max-w-sm flex flex-col justify-between h-90 bg-slate-300  text-slate-800">
+      <Card
+        className="w-full max-w-sm flex flex-col justify-between h-90 bg-white/20 backdrop-blur-md text-white border border-white/30
+"
+      >
         <CardHeader className="mt-20">
           <CardTitle className="text-2xl font-bold">Saved Locations</CardTitle>
-          <CardDescription className="text-slate-800">
+          <CardDescription className="text-gray-200">
             Click through to a list of your saved locations. You can add as many
             as you like.
           </CardDescription>
@@ -28,13 +29,17 @@ export default function HomepageCards() {
         </CardFooter>
       </Card>
 
-      <Card className="w-full max-w-sm flex flex-col justify-between h-90  bg-slate-300 text-slate-800">
+      <Card
+        className="w-full max-w-sm flex flex-col justify-between h-90 bg-white/20 backdrop-blur-md text-white border border-white/30
+"
+      >
         <CardHeader className="mt-20">
           <CardTitle className="text-2xl font-bold">
             View Capitals by Continent
           </CardTitle>
-          <CardDescription className="text-slate-800">
-            Click through to find and view a capital city in your preferred country.
+          <CardDescription className="text-gray-200">
+            Click through to find and view a capital city in your preferred
+            country.
           </CardDescription>
           {/* <CardAction>Card Action</CardAction> */}
         </CardHeader>
@@ -46,12 +51,15 @@ export default function HomepageCards() {
         </CardFooter>
       </Card>
 
-      <Card className="w-full max-w-sm flex flex-col justify-between h-90 bg-slate-300 text-slate-800">
+      <Card
+        className="w-full max-w-sm flex flex-col justify-between h-90 bg-white/20 backdrop-blur-md text-white border border-white/30
+"
+      >
         <CardHeader className="mt-20">
           <CardTitle className="text-2xl font-bold">
             Explore and Compare
           </CardTitle>
-          <CardDescription className="text-slate-800">
+          <CardDescription className="text-gray-200">
             Click through to search for a desired location. You can compare two
             locations.
           </CardDescription>
