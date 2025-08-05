@@ -20,10 +20,15 @@ import SearchedLocations from "./SearchedLocations";
 
 interface AddLocationModalProps {
   onAddLocation: (locationName: string) => void;
+  savedLocations: string[];
 }
 
-export function AddLocationModal({ onAddLocation }: AddLocationModalProps) {
+export function AddLocationModal({
+  onAddLocation,
+  savedLocations,
+}: AddLocationModalProps) {
   const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -50,9 +55,11 @@ export function AddLocationModal({ onAddLocation }: AddLocationModalProps) {
               className="text-black placeholder:text-black"
             />
           </div>
-          
         </div>
-        <SearchedLocations onAddLocation={onAddLocation} />
+        <SearchedLocations
+          onAddLocation={onAddLocation}
+          savedLocations={savedLocations}
+        />
         <DialogFooter className="sm:justify-start">
           <DialogClose asChild>
             <Button type="button" variant="secondary">

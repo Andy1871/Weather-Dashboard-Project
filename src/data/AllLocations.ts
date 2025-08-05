@@ -1,6 +1,24 @@
 export  const allLocationsData = [
     {
-        name: "Carlisle, UK",
+        name: "Reading, UK",
+    todayForecast: [
+        { heading: "Temperature", info: "21°C" },
+        { heading: "Rain", info: "1mm" },
+        { heading: "Wind Speed", info: "8mph" },
+        { heading: "Visibility", info: "Clear" },
+        { heading: "UV Index", info: "6" },
+    ],
+    weekForecast: [
+        { name: "Today", low: "13°C", high: "21°C" },
+        { name: "Saturday", low: "14°C", high: "22°C" },
+        { name: "Sunday", low: "13°C", high: "20°C" },
+        { name: "Monday", low: "12°C", high: "19°C" },
+        { name: "Tuesday", low: "11°C", high: "18°C" },
+        { name: "Wednesday", low: "13°C", high: "20°C" },
+        { name: "Thursday", low: "14°C", high: "21°C" },
+    ],
+},
+        {name: "Carlisle, UK",
         todayForecast: [
             {heading: "Temperature", info: "30°C"},
             { heading: "Rain", info: "0mm" },

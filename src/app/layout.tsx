@@ -25,13 +25,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased p-6 max-w-7xl mx-auto bg-gradient-to-br from-[#1f1842] via-[#5845c5] to-[#3d3391]
-`}
+        className={`
+          ${geistSans.variable} ${geistMono.variable}
+          antialiased relative min-h-screen
+        `}
       >
-        {children}
+        {/* ✅ Background layer */}
+        <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#1f1842] via-[#5845c5] to-[#3d3391]" />
+        
+        {/* Your actual content */}
+        <div className="p-6 max-w-7xl mx-auto">
+          {children}
+        </div>
       </body>
     </html>
   );
 }
+
 
 // Only customise if changing fonts, adding navbar/sidebar

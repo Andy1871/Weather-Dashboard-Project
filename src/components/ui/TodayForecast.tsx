@@ -1,10 +1,10 @@
 import { Card, CardTitle, CardContent } from "../ui/card";
 
 interface TodayForecastProps {
-  data: { heading: string; info: string }[];
+  data: { heading: string; info: string }[]; // this is taken from AllLocations. 
 }
 
-export default function TodayForecast({ data }: TodayForecastProps) {
+export default function TodayForecast({ data }: TodayForecastProps ) { 
   return (
     <div>
       <h5 className="font-bold ml-5 mb-2">Friday, 23rd August</h5>

@@ -8,12 +8,20 @@ import { allLocationsData } from "@/data/AllLocations";
 
 export default function SavedLocations() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [savedLocations, setSavedLocations] = useState<string[]>([]);
+  const [savedLocations, setSavedLocations] = useState<string[]>([
+    "Carlisle, UK",
+    "Madrid, Spain",
+  ]);
 
   const handleAddLocation = (locationName: string) => {
     if (!savedLocations.includes(locationName)) {
       setSavedLocations([...savedLocations, locationName]);
+      //how do i set the add button to grey/not usable.
     }
+  };
+
+  const handleRemoveLocation = (locationName: string) => {
+    setSavedLocations(savedLocations.filter((loc) => loc !== locationName));
   };
 
   const filteredLocations = savedLocations.filter((location) =>
@@ -34,21 +42,23 @@ export default function SavedLocations() {
           />
         </div>
         <div className="absolute right-0">
-          <AddLocationModal onAddLocation={handleAddLocation} />
+          <AddLocationModal onAddLocation={handleAddLocation} savedLocations={savedLocations} />
         </div>
       </div>
 
+      {/* we use allLocationsData.find, inside a locationData constant. This allows us to use props below, but using locationData.todayForecast etc instead. */}
       {filteredLocations.map((locationName) => {
         const locationData = allLocationsData.find(
           (loc) => loc.name === locationName
         );
         return (
-          locationData && (
+          locationData && ( // 'locationData &&' basically just says 'if locationData exists, do the below (grab the props from allLocationData, under its new name)'
             <SavedLocationCard
               key={locationName}
               location={locationData.name}
               todayForecast={locationData.todayForecast}
               weekForecast={locationData.weekForecast}
+              onRemove={() => handleRemoveLocation(locationData.name)}
             />
           )
         );
