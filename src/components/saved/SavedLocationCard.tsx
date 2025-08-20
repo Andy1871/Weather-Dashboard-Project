@@ -6,6 +6,7 @@ import { ButtonWithRemove } from "../ui/remove";
 
 interface SavedLocationCardProps {
   location: string;
+  dt: number;
   todayForecast: { heading: string; info: string }[];
   weekForecast: { name: string; low: string; high: string }[];
   onRemove: () => void;
@@ -13,6 +14,7 @@ interface SavedLocationCardProps {
 
 export default function SavedLocationCard({
   location,
+  dt,
   todayForecast,
   weekForecast,
   onRemove,
@@ -27,7 +29,7 @@ rounded-xl shadow-sm mb-6"
         <ButtonWithRemove onClick={onRemove} />
       </div>
       <div>
-        <TodayForecast data={todayForecast} />
+        <TodayForecast dt={dt} data={todayForecast} />
         <WeekForecast data={weekForecast} />
       </div>
     </div>

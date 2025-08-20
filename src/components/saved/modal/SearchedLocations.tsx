@@ -1,39 +1,53 @@
 import { ButtonWithIcon } from "@/components/ui/add";
 
+type SearchResult = {
+  id: string;
+  name: string;
+  state: string | null;
+  country: string;
+  lat: number;
+  lon: number;
+  displayName: string;
+};
+
 interface SearchedLocationsProps {
-  onAddLocation: (location: string) => void;
-  savedLocations: string[];
+  locations: SearchResult[];
+  loading?: boolean;
+  error?: string | null;
+  onAddLocation: (loc: SearchResult) => void;
+  isSaved: (loc: SearchResult) => boolean;
 }
 
-
-const locations = [
-  "Carlisle, UK",
-  "Madrid, Spain",
-  "Seattle, USA",
-  "Dubai, UAE",
-  "Sydney, Australia",
-];
-
 export default function SearchedLocations({
+  locations,
+  loading,
+  error,
   onAddLocation,
-  savedLocations,
+  isSaved,
 }: SearchedLocationsProps) {
+  if (loading) return <div className="py-3 text-sm">Searching…</div>;
+  if (error) return <div className="py-3 text-sm text-red-600">{error}</div>;
+  if (!locations.length) return <div className="py-3 text-sm">No results</div>;
+
   return (
     <div className="flex flex-col gap-3">
-      {locations.map((location, index) => {
-        const isAlreadySaved = savedLocations.some(
-          (saved) => saved.toLowerCase() === location.toLowerCase()
-        );
-
+      {locations.map((loc) => {
+        const disabled = isSaved(loc);
         return (
           <div
-            key={index}
+            key={loc.id}
             className="flex justify-between items-center py-2 border-b last:border-none"
           >
-            <h4 className="text-base font-medium">{location}</h4>
+            <div className="text-base">
+              <h4 className="font-medium">{loc.displayName}</h4>
+              <p className="text-xs opacity-70">
+                lat {loc.lat.toFixed(2)}, lon {loc.lon.toFixed(2)}
+              </p>
+            </div>
             <ButtonWithIcon
-              onClick={() => onAddLocation(location)}
-              disabled={isAlreadySaved}
+              onClick={() => onAddLocation(loc)}
+              disabled={disabled}
+              aria-disabled={disabled}
             />
           </div>
         );

@@ -1,3 +1,4 @@
+import AppHeader from "@/components/AppHeader";
 import FavouriteLocationCard from "@/components/FavouriteLocationBanner/FavouriteLocationCard";
 import HomepageCards from "@/components/HomepageCards";
 
@@ -5,9 +6,7 @@ import HomepageCards from "@/components/HomepageCards";
 export default function Home() {
   return (
     <div>
-      <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-gray-200">
-        Weather App
-      </h1>
+      <AppHeader title="Weather App" />
       <HomepageCards />
       <FavouriteLocationCard />
     </div>

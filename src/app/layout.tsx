@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,11 +31,10 @@ export default function RootLayout({
           antialiased relative min-h-screen
         `}
       >
-        {/* ✅ Background layer */}
         <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#1f1842] via-[#5845c5] to-[#3d3391]" />
-        
-        {/* Your actual content */}
+      
         <div className="p-6 max-w-7xl mx-auto">
+          <Breadcrumbs />
           {children}
         </div>
       </body>
