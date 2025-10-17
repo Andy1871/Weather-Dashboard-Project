@@ -12,7 +12,7 @@ type Row = {
   display_name: string;
   lat: number;
   lon: number;
-  is_favorite?: boolean;
+  is_favorite?: boolean; // may be undefined in older data; treat as false
 };
 
 type SearchResult = {
@@ -23,15 +23,27 @@ type SearchResult = {
 };
 
 export default function SavedLocations({ initial = [] as Row[] }) {
+  // Normalize initial so undefined -> false, helps the filter below.
+  const [saved, setSaved] = useState<Row[]>(
+    initial.map((r) => ({ ...r, is_favorite: !!r.is_favorite }))
+  );
   const [searchTerm, setSearchTerm] = useState("");
-  const [saved, setSaved] = useState<Row[]>(initial);
 
   const handleAddLocation = async (r: SearchResult) => {
-    // optimistic add
+    // optimistic add (explicitly mark as non-favourite)
     setSaved((prev) =>
       prev.some((s) => s.location_id === r.id)
         ? prev
-        : [...prev, { location_id: r.id, display_name: r.displayName, lat: r.lat, lon: r.lon }]
+        : [
+            ...prev,
+            {
+              location_id: r.id,
+              display_name: r.displayName,
+              lat: r.lat,
+              lon: r.lon,
+              is_favorite: false, // <-- important
+            },
+          ]
     );
 
     try {
@@ -40,6 +52,7 @@ export default function SavedLocations({ initial = [] as Row[] }) {
         display_name: r.displayName,
         lat: r.lat,
         lon: r.lon,
+        // server should default is_favorite to false; passing it is fine too
       });
     } catch {
       // roll back if needed
@@ -58,11 +71,14 @@ export default function SavedLocations({ initial = [] as Row[] }) {
     }
   };
 
+  // Hide favourites here so Favourite entries never appear in this list
   const filtered = useMemo(
     () =>
-      saved.filter((l) =>
-        l.display_name.toLowerCase().includes(searchTerm.toLowerCase())
-      ),
+      saved
+        .filter((l) => !l.is_favorite) // <-- hide favourites from Saved list
+        .filter((l) =>
+          l.display_name.toLowerCase().includes(searchTerm.toLowerCase())
+        ),
     [saved, searchTerm]
   );
 
