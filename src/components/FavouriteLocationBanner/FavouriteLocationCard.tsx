@@ -1,4 +1,4 @@
-// FavouriteLocationCard.tsx
+
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -238,7 +238,6 @@ export default function FavouriteLocationCard() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onSubmit={handleSubmit}
-            suggestions={suggestions}
             onSelectSuggestion={handleSelectSuggestion}
           />
         </div>
