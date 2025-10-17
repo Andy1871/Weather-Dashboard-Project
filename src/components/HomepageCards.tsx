@@ -5,90 +5,74 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "@/components/ui/card";
+import * as React from "react";
+
+const cards = [
+  {
+    href: "/savedLocations",
+    title: "Saved Locations",
+    desc:
+      "Pin your favourite places for instant access. Unlimited saves, organized and quick.",
+    cta: "View saved locations",
+  },
+  {
+    href: "/continents",
+    title: "Capitals by Continent",
+    desc:
+      "Browse every capital by region and see today’s conditions at a glance.",
+    cta: "View continents",
+  },
+  // {
+  //   href: "/explore",
+  //   title: "Explore & Compare",
+  //   desc:
+  //     "Search any city worldwide and compare two locations side by side.",
+  //   cta: "Explore locations",
+  // },
+];
 
 export default function HomepageCards() {
+  const surfaceVars = {
+    "--card": "oklch(from var(--background) l c h / 0.08)",
+    "--card-foreground": "oklch(0.98 0 0)",
+    "--border": "oklch(1 0 0 / 0.26)",
+    "--muted-foreground": "oklch(0.96 0 0 / 0.85)",
+  } as React.CSSProperties & Record<string, string>;
+
   return (
-    <div className="flex gap-5 flex-row justify-between py-5">
-      <Link
-        href="savedLocations"
-        className="w-full max-w-sm transition-transform duration-200 hover:scale-103"
-      >
-        <Card className="w-full max-w-sm flex flex-col justify-between h-90 bg-white/20 backdrop-blur-md text-white border border-white/30">
-          <CardHeader className="mt-20">
-            <CardTitle className="text-2xl font-bold">
-              Saved Locations
-            </CardTitle>
-            <CardDescription className="text-gray-200">
-              Click through to a list of your saved locations. You can add as
-              many as you like.
-            </CardDescription>
-            {/* <CardAction>Card Action</CardAction> */}
-          </CardHeader>
-          {/* <CardContent>
-          <p>Card Content</p>
-        </CardContent> */}
-          <CardFooter className="flex justify-end">
-            <p>View saved locations --------{">"} </p>
-          </CardFooter>
-        </Card>
-      </Link>
+    <div className="section">
+      <div className="grid items-stretch gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        {cards.map((c) => (
+          <Link
+            key={c.title}
+            href={c.href}
+            className="block h-full rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+          >
+            <Card
+              className="h-full min-h-[220px] rounded-2xl backdrop-blur-md border shadow-md transition-transform duration-200 ease-out hover:shadow-lg hover:-translate-y-0.5 hover:scale-[1.02] grid grid-rows-[auto_1fr_auto]"
+              style={surfaceVars}
+            >
+              <CardHeader className="p-6 pt-8">
+                <CardTitle className="text-2xl font-extrabold tracking-tight">
+                  {c.title}
+                </CardTitle>
+                <CardDescription className="mt-2 text-sm leading-relaxed">
+                  {c.desc}
+                </CardDescription>
+              </CardHeader>
 
-      <Link
-        href="continents"
-        className="w-full max-w-sm transition-transform duration-200 hover:scale-103"
-      >
-        <Card
-          className="w-full max-w-sm flex flex-col justify-between h-90 bg-white/20 backdrop-blur-md text-white border border-white/30
-"
-        >
-          <CardHeader className="mt-20">
-            <CardTitle className="text-2xl font-bold">
-              View Capitals by Continent
-            </CardTitle>
-            <CardDescription className="text-gray-200">
-              Click through to find and view a capital city in your preferred
-              country.
-            </CardDescription>
-            {/* <CardAction>Card Action</CardAction> */}
-          </CardHeader>
-          {/* <CardContent>
-          <p>Card Content</p>
-        </CardContent> */}
-          <CardFooter className="flex justify-end">
-            <p>View continents --------{">"} </p>
-          </CardFooter>
-        </Card>
-      </Link>
+              {/* middle 1fr row acts as spacer so footers align */}
 
-      <Link
-        href="savedLocations"
-        className="w-full max-w-sm transition-transform duration-200 hover:scale-103"
-      >
-        <Card
-          className="w-full max-w-sm flex flex-col justify-between h-90 bg-white/20 backdrop-blur-md text-white border border-white/30
-"
-        >
-          <CardHeader className="mt-20">
-            <CardTitle className="text-2xl font-bold">
-              Explore and Compare
-            </CardTitle>
-            <CardDescription className="text-gray-200">
-              Click through to search for a desired location. You can compare
-              two locations.
-            </CardDescription>
-            {/* <CardAction>Card Action</CardAction> */}
-          </CardHeader>
-          {/* <CardContent>
-          <p>Card Content</p>
-        </CardContent> */}
-          <CardFooter className="flex justify-end">
-            <p>Explore locations --------{">"} </p>
-          </CardFooter>
-        </Card>
-      </Link>
+              <CardFooter className="p-6 pt-0 flex justify-end items-center">
+                <p className="text-sm tracking-wide opacity-90">
+                  {c.cta} <span aria-hidden>→</span>
+                </p>
+              </CardFooter>
+            </Card>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
-
-//  className="w-full max-w-sm"

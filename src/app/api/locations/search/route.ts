@@ -37,7 +37,7 @@ export async function GET(req: Request) {
     lon: number;
   }>;
 
-  // Normalize for your UI
+  
   const results = data.map((d, i) => ({
     id: `${d.name}-${d.state ?? ""}-${d.country}-${d.lat}-${d.lon}-${i}`,
     name: d.name,

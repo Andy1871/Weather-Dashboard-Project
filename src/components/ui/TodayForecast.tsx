@@ -1,9 +1,15 @@
-import { Card, CardTitle, CardContent } from "../ui/card";
+// TodayForecast.tsx
 import { format, isValid as isValidDate, fromUnixTime } from "date-fns";
+
+interface TodayForecastItem {
+  heading: string;
+  info: string;
+  subInfo?: string; // NEW
+}
 
 interface TodayForecastProps {
   dt?: number;
-  data?: { heading: string; info: string }[]; // this is taken from AllLocations.
+  data?: TodayForecastItem[];
 }
 
 function safeDateFromMaybeUnix(dt?: number) {
@@ -19,28 +25,33 @@ export default function TodayForecast({ dt, data }: TodayForecastProps) {
 
   return (
     <div>
-      <h5 className="font-bold ml-5 mb-2">{now}</h5>
+      <div className="flex items-baseline justify-between px-4">
+        <h5 className="font-bold ml-1 mb-2">{now}</h5>
+      </div>
 
       {items.length === 0 ? (
         <p className="ml-5 text-sm opacity-70">No forecast data.</p>
       ) : (
-        <div className="flex gap-4 flex-row justify-between px-4">
-          {items.map((today, index) => (
-            <Card
-              key={index}
-              className="gap-2 w-full flex flex-col h-30 justify-center text-center bg-slate-300  text-slate-800 shadow-none min-h-35"
+        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 px-4">
+          {items.map((it, idx) => (
+            <li
+              key={idx}
+              className="rounded-xl border border-[color:var(--border)]/100 bg-white/0 px-4 py-3 text-center"
             >
-              <CardTitle className="text-lg">{today.heading}</CardTitle>
-              <CardContent className="p-0 mt-0 text-2xl font-bold">
-                <p className="pl-1 pr-1">{today.info}</p>
-              </CardContent>
-            </Card>
+              <div className="text-sm opacity-80">{it.heading}</div>
+              <div className="text-2xl font-bold leading-tight mt-1 text-white">
+                {it.info}
+              </div>
+              {it.subInfo && (
+                <div className="text-xs opacity-80 mt-0.5">{it.subInfo}</div>
+              )}
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
       {!dateObj && (
-        <p className="text-sm text-red-600 ml-5 mt-2">
+        <p className="text-sm text-red-300 ml-5 mt-2">
           Invalid or missing date for this forecast.
         </p>
       )}

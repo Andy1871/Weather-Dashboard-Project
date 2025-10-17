@@ -1,13 +1,14 @@
+// SearchedLocations.tsx
 import { ButtonWithIcon } from "@/components/ui/add";
 
 type SearchResult = {
   id: string;
   name: string;
   state: string | null;
-  country: string;
+  country: string;       // now already the full name (see modal changes)
   lat: number;
   lon: number;
-  displayName: string;
+  displayName: string;   // "City, State, Country (full)"
 };
 
 interface SearchedLocationsProps {
@@ -25,9 +26,9 @@ export default function SearchedLocations({
   onAddLocation,
   isSaved,
 }: SearchedLocationsProps) {
-  if (loading) return <div className="py-3 text-sm">Searching…</div>;
+  if (loading) return <div className="py-3 text-sm text-white">Searching…</div>;
   if (error) return <div className="py-3 text-sm text-red-600">{error}</div>;
-  if (!locations.length) return <div className="py-3 text-sm">No results</div>;
+  if (!locations.length) return <div className="py-3 text-sm text-white">No results</div>;
 
   return (
     <div className="flex flex-col gap-3">
@@ -36,13 +37,10 @@ export default function SearchedLocations({
         return (
           <div
             key={loc.id}
-            className="flex justify-between items-center py-2 border-b last:border-none"
+            className="flex justify-between items-center px-4 py-3 border-b last:border-b-0 border-[color:var(--border)]/60"
           >
             <div className="text-base">
-              <h4 className="font-medium">{loc.displayName}</h4>
-              <p className="text-xs opacity-70">
-                lat {loc.lat.toFixed(2)}, lon {loc.lon.toFixed(2)}
-              </p>
+              <h4 className="font-semibold text-white">{loc.displayName}</h4>
             </div>
             <ButtonWithIcon
               onClick={() => onAddLocation(loc)}

@@ -16,20 +16,22 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import SearchedLocations from "./SearchedLocations";
 
 interface AddLocationModalProps {
-  onAddLocation: (loc: SearchResult) => void; // expects display name
-  savedLocations: string[]; // array of display names
+  onAddLocation: (loc: SearchResult) => void;
+  savedLocations: string[];
 }
-
 
 type SearchResult = {
   id: string;
   name: string;
   state: string | null;
-  country: string;
+  country: string;    // may arrive as ISO code; we normalize to full name below
   lat: number;
   lon: number;
   displayName: string; // "City, State, Country"
 };
+
+const composeDisplay = (...parts: Array<string | null | undefined>) =>
+  parts.filter(Boolean).join(", ");
 
 export function AddLocationModal({
   onAddLocation,
@@ -42,11 +44,17 @@ export function AddLocationModal({
   const [error, setError] = useState<string | null>(null);
   const acRef = useRef<AbortController | null>(null);
 
+  const surfaceVars = {
+    "--card": "oklch(from var(--background) l c h / 0.08)",
+    "--card-foreground": "oklch(0.98 0 0)",
+    "--border": "oklch(1 0 0 / 0.26)",
+    "--muted-foreground": "oklch(0.96 0 0 / 0.85)",
+  } as React.CSSProperties & Record<string, string>;
+
   useEffect(() => {
-    if (!open) return; // only search when modal is open
+    if (!open) return;
     const term = searchTerm.trim();
 
-    // Clear results when empty
     if (!term) {
       setResults([]);
       setError(null);
@@ -56,9 +64,7 @@ export function AddLocationModal({
     setLoading(true);
     setError(null);
 
-    // Debounce
     const t = setTimeout(async () => {
-      // cancel previous request
       acRef.current?.abort();
       const ac = new AbortController();
       acRef.current = ac;
@@ -70,11 +76,21 @@ export function AddLocationModal({
         );
         if (!res.ok) throw new Error("Search failed");
         const data = await res.json();
-        setResults(data.results as SearchResult[]);
+
+        // Normalize country codes to full names and rebuild displayName accordingly
+        const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+        const normalized: SearchResult[] = (data.results as SearchResult[]).map((r) => {
+          const fullCountry =
+            r.country && r.country.length === 2
+              ? (regionNames.of(r.country) as string) ?? r.country
+              : r.country;
+          const displayName = composeDisplay(r.name, r.state || undefined, fullCountry);
+          return { ...r, country: fullCountry, displayName };
+        });
+
+        setResults(normalized);
       } catch (e: any) {
-        if (e.name !== "AbortError") {
-          setError(e.message ?? "Search failed");
-        }
+        if (e.name !== "AbortError") setError(e.message ?? "Search failed");
       } finally {
         setLoading(false);
       }
@@ -89,9 +105,7 @@ export function AddLocationModal({
     setResults([]);
     setOpen(false);
   };
-  
 
-  // For quick disable checks
   const savedLower = useMemo(
     () => new Set(savedLocations.map((s) => s.toLowerCase())),
     [savedLocations]
@@ -105,9 +119,12 @@ export function AddLocationModal({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-md">
+      <DialogContent
+        className="sm:max-w-md rounded-2xl border shadow-md backdrop-blur-md bg-white/10"
+        style={surfaceVars}
+      >
         <DialogHeader>
-          <DialogTitle>Search for new location</DialogTitle>
+          <DialogTitle className="text-white">Search for new location</DialogTitle>
         </DialogHeader>
 
         <div className="flex items-center gap-2">
@@ -116,7 +133,7 @@ export function AddLocationModal({
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="text-black placeholder:text-black"
+              className="bg-white/80 text-black placeholder:text-black"
             />
           </div>
         </div>

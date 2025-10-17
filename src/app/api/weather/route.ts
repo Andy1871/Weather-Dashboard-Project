@@ -20,12 +20,12 @@ type TodayForecast = {
 };
 
 type DayForecast = {
-  dt: number;       // unix (start of day, best-effort)
+  dt: number; // unix (UTC)
   min: number;
   max: number;
   description: string;
   icon: string;
-  pop?: number;     // probability of precip (0..1) when available
+  pop?: number; // 0..1
 };
 
 type WeatherPayload = {
@@ -34,7 +34,9 @@ type WeatherPayload = {
   units: "metric" | "imperial";
   todayForecast: TodayForecast;
   weekForecast: DayForecast[];
-  // raw: any; // uncomment if you want the raw APIs back
+  // NEW: surface tz so client can format local times correctly
+  timezone?: string;          // IANA tz from One Call 3.0 (e.g. "Europe/Paris")
+  timezone_offset?: number;   // seconds from UTC (present in 3.0 and 2.5 current)
 };
 
 function isLocArray(x: unknown): x is Loc[] {
@@ -43,10 +45,10 @@ function isLocArray(x: unknown): x is Loc[] {
     x.every(
       (i) =>
         i &&
-        typeof i.country === "string" &&
-        typeof i.capital === "string" &&
-        typeof i.lat === "number" &&
-        typeof i.lon === "number"
+        typeof (i as any).country === "string" &&
+        typeof (i as any).capital === "string" &&
+        typeof (i as any).lat === "number" &&
+        typeof (i as any).lon === "number"
     )
   );
 }
@@ -93,7 +95,7 @@ async function fetchOneCall(lat: number, lon: number, units: string, lang: strin
     const text = await res.text().catch(() => "");
     throw new Error(`ONECALL3: ${res.status} ${text}`);
   }
-  return res.json();
+  return res.json(); // wx
 }
 
 // Fallback: 2.5 current + 5-day/3-hour, aggregate to daily min/max
@@ -144,18 +146,10 @@ async function fetch2p5Aggregated(lat: number, lon: number, units: string, lang:
 
     const prev = byDay.get(dayKey);
     if (!prev) {
-      byDay.set(dayKey, {
-        min,
-        max,
-        icon,
-        description: desc,
-        pop,
-        dt, // keep first slot as representative
-      });
+      byDay.set(dayKey, { min, max, icon, description: desc, pop, dt });
     } else {
       prev.min = Math.min(prev.min, min);
       prev.max = Math.max(prev.max, max);
-      // Prefer the slot around midday (12:00) for icon/description if available
       const hour = new Date(dt * 1000).getUTCHours();
       if (hour === 12) {
         prev.icon = icon;
@@ -165,7 +159,7 @@ async function fetch2p5Aggregated(lat: number, lon: number, units: string, lang:
     }
   }
 
-  const days = Array.from(byDay.entries())
+  const days: DayForecast[] = Array.from(byDay.entries())
     .sort(([a], [b]) => (a < b ? -1 : 1))
     .slice(0, 7)
     .map(([_, v]) => ({
@@ -177,12 +171,13 @@ async function fetch2p5Aggregated(lat: number, lon: number, units: string, lang:
       pop: v.pop,
     }));
 
-  return { today, days };
+  // NOTE: 2.5 `current` has `timezone` = offset (seconds from UTC). No IANA tz here.
+  const tzOffset: number | null = typeof current?.timezone === "number" ? current.timezone : null;
+
+  return { today, days, tzOffset };
 }
 
-function mapOneCallToPayload(
-  wx: any
-): { today: TodayForecast; days: DayForecast[] } {
+function mapOneCallToPayload(wx: any): { today: TodayForecast; days: DayForecast[] } {
   const today: TodayForecast = {
     dt: wx.current?.dt,
     temp: round(wx.current?.temp),
@@ -210,19 +205,33 @@ function mapOneCallToPayload(
 async function fetchWeatherBundle(
   lat: number,
   lon: number,
-  {
-    units = "metric",
-    lang = "en",
-  }: { units?: "metric" | "imperial"; lang?: string }
+  { units = "metric", lang = "en" }: { units?: "metric" | "imperial"; lang?: string }
 ) {
   // Try One Call 3.0 first, then fallback to 2.5 aggregation
   try {
     const wx = await fetchOneCall(lat, lon, units, lang);
     const { today, days } = mapOneCallToPayload(wx);
-    return { today, days, raw: wx };
-  } catch {
-    const { today, days } = await fetch2p5Aggregated(lat, lon, units, lang);
-    return { today, days, raw: undefined };
+    // Return tz data from One Call 3.0
+    return {
+      today,
+      days,
+      tz: typeof wx?.timezone === "string" ? (wx.timezone as string) : undefined,
+      tzOffset:
+        typeof wx?.timezone_offset === "number" ? (wx.timezone_offset as number) : undefined,
+      raw: wx,
+      used: "onecall3" as const,
+    };
+  } catch (err) {
+    console.error("ONECALL3 failed; using 2.5 fallback:", err);
+    const { today, days, tzOffset } = await fetch2p5Aggregated(lat, lon, units, lang);
+    return {
+      today,
+      days,
+      tz: undefined,
+      tzOffset: typeof tzOffset === "number" ? tzOffset : undefined,
+      raw: undefined,
+      used: "2p5" as const,
+    };
   }
 }
 
@@ -245,18 +254,24 @@ export async function POST(req: Request) {
       const results = await Promise.all(
         (body.locations as Loc[]).map(async (l) => {
           try {
-            const { today, days } = await fetchWeatherBundle(l.lat, l.lon, { units, lang });
+            const { today, days, tz, tzOffset } = await fetchWeatherBundle(l.lat, l.lon, {
+              units,
+              lang,
+            });
+
             const name =
-              (await reverseGeocode(l.lat, l.lon)) ||
-              composeName([l.capital, l.country]);
+              (await reverseGeocode(l.lat, l.lon)) || composeName([l.capital, l.country]);
+
             const payload: WeatherPayload = {
               name,
               coords: { lat: l.lat, lon: l.lon },
               units,
               todayForecast: today,
               weekForecast: days,
-              // raw,
+              timezone: tz,
+              timezone_offset: tzOffset,
             };
+
             return { ...l, ok: true as const, data: payload };
           } catch (e: any) {
             return {
@@ -304,7 +319,11 @@ export async function POST(req: Request) {
       );
     }
 
-    const { today, days } = await fetchWeatherBundle(latNum, lonNum, { units, lang });
+    const { today, days, tz, tzOffset } = await fetchWeatherBundle(latNum, lonNum, {
+      units,
+      lang,
+    });
+
     const name =
       displayName || (await reverseGeocode(latNum, lonNum)) || `Lat ${latNum}, Lon ${lonNum}`;
 
@@ -314,7 +333,8 @@ export async function POST(req: Request) {
       units,
       todayForecast: today,
       weekForecast: days,
-      // raw,
+      timezone: tz,
+      timezone_offset: tzOffset,
     };
 
     return NextResponse.json(payload);
