@@ -1,4 +1,5 @@
 export type WeatherBundle = {
+    name: string;
     todayForecast: {
       dt: number;
       temp: number;
