@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Weather Dashboard
 
-## Getting Started
+A **Next.js weather dashboard app** to view weather in locations around the world. Save favourite locations to view when you like, or compare the weather from capital cities within each continent.  
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Live Demo:** (https://weather-dashboard-chi-gules.vercel.app/) - Free, secure login via Google 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![shadcn/ui](https://img.shields.io/badge/shadcn/ui-18181B?style=for-the-badge)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Features
 
-## Learn More
+- **Current and Daily Weather** — data populated via OpenWeatherMap API
+- **Add Saved Locations form** — search for and save locations. Also filter all saved locations
+- **Cached Data** — Large amounts of data cached for smooth UX 
+- **Responsive design** — card components resize nicely on all devices
+- **User authentication** — Secure login allows user's favourite and saved locations to be stored 
+- **Supabase backend** — scalable, secure data storage  
+- **Deployed on Vercel**
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Category | Technology |
+|-----------|-------------|
+| Framework | [Next.js 14](https://nextjs.org/) (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS, [shadcn/ui](https://ui.shadcn.com/) |
+| Backend | Supabase (Auth + DB) |
+| External API | OpenWeatherMap |
+| Deployment | Vercel |
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
