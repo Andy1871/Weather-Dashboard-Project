@@ -1,4 +1,3 @@
-// app/continents/[continent]/page.tsx
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -49,7 +48,7 @@ export default function ContinentPage() {
         const res = await fetch("/api/weather", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ locations: countries }), // batch mode
+          body: JSON.stringify({ locations: countries }), 
         });
 
         if (!res.ok) {

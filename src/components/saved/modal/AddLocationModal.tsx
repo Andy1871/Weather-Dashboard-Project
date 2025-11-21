@@ -27,9 +27,10 @@ type SearchResult = {
   country: string;    // may arrive as ISO code; we normalize to full name below
   lat: number;
   lon: number;
-  displayName: string; // "City, State, Country"
+  displayName: string; // City, State, Country
 };
 
+// add commas to display name via 'parts' array
 const composeDisplay = (...parts: Array<string | null | undefined>) =>
   parts.filter(Boolean).join(", ");
 
@@ -64,6 +65,7 @@ export function AddLocationModal({
     setLoading(true);
     setError(null);
 
+    // refresh abort after 300ms so not constantly calling API when typing
     const t = setTimeout(async () => {
       acRef.current?.abort();
       const ac = new AbortController();
@@ -77,9 +79,11 @@ export function AddLocationModal({
         if (!res.ok) throw new Error("Search failed");
         const data = await res.json();
 
-        // Normalize country codes to full names and rebuild displayName accordingly
+        // Normalise country codes to full names and rebuild displayName 
         const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+        // treat data.results as array of SearchResults objects. r is just individual result
         const normalized: SearchResult[] = (data.results as SearchResult[]).map((r) => {
+          //building search results as human readable text
           const fullCountry =
             r.country && r.country.length === 2
               ? (regionNames.of(r.country) as string) ?? r.country
@@ -106,6 +110,7 @@ export function AddLocationModal({
     setOpen(false);
   };
 
+  // memoise items that have already been saved, used for cheks when rendering search results. only runs when savedLocations change
   const savedLower = useMemo(
     () => new Set(savedLocations.map((s) => s.toLowerCase())),
     [savedLocations]

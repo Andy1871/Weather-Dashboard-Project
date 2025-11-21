@@ -1,4 +1,3 @@
-// components/saved/SavedLocationCard.tsx
 "use client";
 
 import TodayForecast from "../ui/TodayForecast";
@@ -15,7 +14,7 @@ import {
 
 interface SavedLocationCardProps {
   location: string;
-  bundle: WeatherBundle;
+  bundle: WeatherBundle; // passed down from SavedLocationCardContainer - contains weather payload that we pass to Week/Day forecast
   onRemove: () => void;
 }
 
@@ -24,7 +23,6 @@ export default function SavedLocationCard({
   bundle,
   onRemove,
 }: SavedLocationCardProps) {
-  // identical surface vars to FavouriteLocationCard
   const surfaceVars = {
     "--card": "oklch(from var(--background) l c h / 0.08)",
     "--card-foreground": "oklch(0.98 0 0)",

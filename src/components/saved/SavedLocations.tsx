@@ -12,7 +12,7 @@ type Row = {
   display_name: string;
   lat: number;
   lon: number;
-  is_favorite?: boolean; // may be undefined in older data; treat as false
+  is_favorite?: boolean;
 };
 
 type SearchResult = {
@@ -23,14 +23,12 @@ type SearchResult = {
 };
 
 export default function SavedLocations({ initial = [] as Row[] }) {
-  // Normalize initial so undefined -> false, helps the filter below.
   const [saved, setSaved] = useState<Row[]>(
     initial.map((r) => ({ ...r, is_favorite: !!r.is_favorite }))
   );
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleAddLocation = async (r: SearchResult) => {
-    // optimistic add (explicitly mark as non-favourite)
     setSaved((prev) =>
       prev.some((s) => s.location_id === r.id)
         ? prev
@@ -41,7 +39,7 @@ export default function SavedLocations({ initial = [] as Row[] }) {
               display_name: r.displayName,
               lat: r.lat,
               lon: r.lon,
-              is_favorite: false, // <-- important
+              is_favorite: false, // important 
             },
           ]
     );
@@ -52,7 +50,7 @@ export default function SavedLocations({ initial = [] as Row[] }) {
         display_name: r.displayName,
         lat: r.lat,
         lon: r.lon,
-        // server should default is_favorite to false; passing it is fine too
+        
       });
     } catch {
       // roll back if needed
@@ -61,7 +59,6 @@ export default function SavedLocations({ initial = [] as Row[] }) {
   };
 
   const handleRemoveLocation = async (location_id: string) => {
-    // optimistic remove
     const before = saved;
     setSaved((prev) => prev.filter((l) => l.location_id !== location_id));
     try {
@@ -75,7 +72,7 @@ export default function SavedLocations({ initial = [] as Row[] }) {
   const filtered = useMemo(
     () =>
       saved
-        .filter((l) => !l.is_favorite) // <-- hide favourites from Saved list
+        .filter((l) => !l.is_favorite) // hide favourites from Saved list
         .filter((l) =>
           l.display_name.toLowerCase().includes(searchTerm.toLowerCase())
         ),

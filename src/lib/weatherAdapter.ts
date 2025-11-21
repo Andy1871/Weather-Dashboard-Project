@@ -8,18 +8,18 @@ export type WeatherBundle = {
       icon: string;
       humidity?: number;
       windSpeed?: number;
-      sunrise?: number;  // unix (s)
-      sunset?: number;   // unix (s)
+      sunrise?: number;  
+      sunset?: number;   
     };
     weekForecast: Array<{
-      dt: number;        // unix (s)
+      dt: number;        
       min: number;
       max: number;
       description: string;
       icon: string;
       pop?: number;
     }>;
-    timezone?: string;
+    timezone?: string
     timezone_offset?: number;
   };
   
@@ -42,7 +42,7 @@ export type WeatherBundle = {
   ) {
     const t = b.todayForecast;
     const d0 = b.weekForecast?.[0];
-    const pop = typeof d0?.pop === "number" ? `${Math.round(d0.pop * 100)}%` : "—";
+    const pop = typeof d0?.pop === "number" ? `${Math.round(d0.pop * 100)}%` : "—"; //precipitation
     const subRange =
       d0 && Number.isFinite(d0.min) && Number.isFinite(d0.max)
         ? `${safeRound(d0.min)}°C - ${safeRound(d0.max)}°C`

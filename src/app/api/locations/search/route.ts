@@ -1,4 +1,3 @@
-// app/api/locations/search/route.ts
 import { NextResponse } from "next/server";
 
 const API = "https://api.openweathermap.org/geo/1.0/direct";

@@ -1,10 +1,9 @@
-// TodayForecast.tsx
 import { format, isValid as isValidDate, fromUnixTime } from "date-fns";
 
 interface TodayForecastItem {
   heading: string;
   info: string;
-  subInfo?: string; // NEW
+  subInfo?: string; 
 }
 
 interface TodayForecastProps {
@@ -14,6 +13,7 @@ interface TodayForecastProps {
 
 function safeDateFromMaybeUnix(dt?: number) {
   if (typeof dt !== "number" || !Number.isFinite(dt)) return null;
+  // if dt is ms or s
   const date = dt > 1_000_000_000_000 ? new Date(dt) : fromUnixTime(dt);
   return isValidDate(date) ? date : null;
 }

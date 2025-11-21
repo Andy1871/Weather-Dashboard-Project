@@ -28,7 +28,7 @@ export async function setFavouriteByDetails(payload: Payload) {
     .eq("is_favorite", true);
   if (unsetErr) throw unsetErr;
 
-  // 2) upsert favourite row (unique per user on lat/lon OR on (user_id, is_favorite) via trigger)
+  // 2) upsert favourite row 
   // Try to find existing row for these coords
   const { data: existing, error: findErr } = await supabase
     .from("saved_locations")

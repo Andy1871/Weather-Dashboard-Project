@@ -19,7 +19,7 @@ export async function getSaved() {
   return data ?? [];
 }
 
-// Add (or upsert) a saved location
+// Add a saved location
 export async function addLocation(loc: {
   location_id: string;
   display_name: string;

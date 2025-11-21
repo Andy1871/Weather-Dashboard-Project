@@ -1,10 +1,9 @@
-// app/api/weather/route.ts
 export const runtime = "nodejs";
 export const revalidate = 600;
 
 import { NextResponse } from "next/server";
 
-// ---------- Types ----------
+
 type Loc = { country: string; capital: string; lat: number; lon: number };
 
 type TodayForecast = {
@@ -28,19 +27,20 @@ type DayForecast = {
   pop?: number; // 0..1
 };
 
+// Match weatherAdapter
 type WeatherPayload = {
   name: string;
   coords: { lat: number; lon: number };
   units: "metric" | "imperial";
   todayForecast: TodayForecast;
   weekForecast: DayForecast[];
-  // NEW: surface tz so client can format local times correctly
   timezone?: string;          // IANA tz from One Call 3.0 (e.g. "Europe/Paris")
   timezone_offset?: number;   // seconds from UTC (present in 3.0 and 2.5 current)
 };
 
 function isLocArray(x: unknown): x is Loc[] {
   return (
+    // confirm x is array, then .every() tests whether all items in the array meet a condition
     Array.isArray(x) &&
     x.every(
       (i) =>
@@ -53,11 +53,11 @@ function isLocArray(x: unknown): x is Loc[] {
   );
 }
 
-// ---------- Config ----------
+
 const OW_KEY = process.env.OPENWEATHER_API_KEY!;
 const BASE = "https://api.openweathermap.org";
 
-// ---------- Helpers ----------
+// Helpers 
 function round(n: any) {
   return typeof n === "number" ? Math.round(n) : n;
 }
@@ -95,10 +95,10 @@ async function fetchOneCall(lat: number, lon: number, units: string, lang: strin
     const text = await res.text().catch(() => "");
     throw new Error(`ONECALL3: ${res.status} ${text}`);
   }
-  return res.json(); // wx
+  return res.json(); 
 }
 
-// Fallback: 2.5 current + 5-day/3-hour, aggregate to daily min/max
+// Fallback 2.5 current + 5-day/3-hour, aggregate to daily min/max
 async function fetch2p5Aggregated(lat: number, lon: number, units: string, lang: string) {
   const currUrl = `${BASE}/data/2.5/weather?lat=${lat}&lon=${lon}&units=${units}&lang=${lang}&appid=${OW_KEY}`;
   const fcUrl = `${BASE}/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${units}&lang=${lang}&appid=${OW_KEY}`;
@@ -136,8 +136,8 @@ async function fetch2p5Aggregated(lat: number, lon: number, units: string, lang:
   >();
 
   for (const it of forecast.list as any[]) {
-    const dt = it.dt as number; // unix
-    const dayKey = new Date(dt * 1000).toISOString().slice(0, 10); // YYYY-MM-DD UTC
+    const dt = it.dt as number; 
+    const dayKey = new Date(dt * 1000).toISOString().slice(0, 10); 
     const min = it.main?.temp_min;
     const max = it.main?.temp_max;
     const icon = it.weather?.[0]?.icon ?? "01d";
@@ -235,7 +235,7 @@ async function fetchWeatherBundle(
   }
 }
 
-// ---------- POST handler ----------
+// POST handler 
 export async function POST(req: Request) {
   try {
     if (!OW_KEY) {
@@ -244,7 +244,7 @@ export async function POST(req: Request) {
 
     const body = await req.json().catch(() => ({} as any));
 
-    // Mode A: batch fetch — { locations: Loc[] }
+    // Mode A: batch fetch. Used for continents page
     if (isLocArray(body?.locations)) {
       const { units = "metric", lang = "en" } = body as {
         units?: "metric" | "imperial";

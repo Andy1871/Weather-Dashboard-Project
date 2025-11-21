@@ -24,7 +24,6 @@ export default function LoginPage() {
         },
       });
     } finally {
-      // Supabase will redirect; this is just a guard for local errors
       setLoading(false);
     }
   };

@@ -33,7 +33,7 @@ export default function FavouriteLocationCard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // --- session -> userId ---
+  // get the session and setUserId
   useEffect(() => {
     let on = true;
     (async () => {
@@ -51,7 +51,7 @@ export default function FavouriteLocationCard() {
     };
   }, [supabase]);
 
-  // --- load favourite for this user ---
+  //  load favourite for retrieved userId
   useEffect(() => {
     if (!userId) {
       setLoading(false);
@@ -84,7 +84,7 @@ export default function FavouriteLocationCard() {
     };
   }, [userId, supabase]);
 
-  // --- fetch weather when favourite changes ---
+  // fetch weather and populate the card with the data, change favourite when changed by user
   useEffect(() => {
     if (!fav) {
       setBundle(null);
@@ -112,13 +112,14 @@ export default function FavouriteLocationCard() {
     };
   }, [fav?.location_id, fav?.lat, fav?.lon]);
 
-  // --- title / tz helpers ---
+  // show display name on render, avoid recomputing
   const title = useMemo(
     () =>
       fav?.display_name ||
       (userId ? "Choose your favourite location" : "Favourite Location"),
     [fav?.display_name, userId]
   );
+
   const { tz, tzOffset } = bundle
     ? getTz(bundle)
     : { tz: null as string | null, tzOffset: null as number | null };
@@ -172,8 +173,8 @@ export default function FavouriteLocationCard() {
   const todayItems = bundle ? toTodayItems(bundle, { formatHM }) : [];
   const weekItems = bundle ? toWeekItems(bundle, { weekdayFor }) : [];
 
-  // --- Add/Set favourite WITHOUT adding to saved list ---
-  // Reuse your existing AddLocationModal; when user picks a result, write favourite directly.
+  // Set favourite WITHOUT adding to longer saved list 
+  // Reuse existing AddLocationModal - when user picks a result, write favourite directly.
   const handleAddAsFavourite = async (r: {
     id: string;
     displayName: string;
@@ -192,9 +193,9 @@ export default function FavouriteLocationCard() {
         lat: r.lat,
         lon: r.lon,
       });
-      // reflect in UI (client-side state)
+      // reflect in UI 
       setFav({
-        location_id: r.id, // client placeholder; DB row has its own id
+        location_id: r.id, // client placeholder - DB row has its own id
         display_name: r.displayName,
         lat: r.lat,
         lon: r.lon,
@@ -221,7 +222,7 @@ export default function FavouriteLocationCard() {
           Favourite Location
         </h2>
 
-        {/* Reuse your modal for search/select; we don't add to saved list */}
+        {/* Reuse modal for search/select - don't add to saved list */}
         <AddLocationModal
           onAddLocation={handleAddAsFavourite}
           savedLocations={fav ? [fav.display_name] : []}

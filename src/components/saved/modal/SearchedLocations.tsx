@@ -1,4 +1,3 @@
-// SearchedLocations.tsx
 import { ButtonWithIcon } from "@/components/ui/add";
 
 type SearchResult = {
@@ -8,7 +7,7 @@ type SearchResult = {
   country: string;       // now already the full name (see modal changes)
   lat: number;
   lon: number;
-  displayName: string;   // "City, State, Country (full)"
+  displayName: string;   // City, State, Country (full)
 };
 
 interface SearchedLocationsProps {

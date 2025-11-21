@@ -32,7 +32,7 @@ export async function GET(req: Request) {
 
   const data = await res.json();
 
-  // Normalise into your card shape
+  // normalise into card shape
   const todayForecast = [
     { heading: "Temp", info: `${Math.round(data.current.temp)}°` },
     { heading: "Feels", info: `${Math.round(data.current.feels_like)}°` },

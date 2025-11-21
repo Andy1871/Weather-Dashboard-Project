@@ -42,6 +42,7 @@ export default function SavedLocationCardContainer({
         if (!r.ok) throw new Error(`Weather failed (${r.status})`);
         const j = (await r.json()) as WeatherBundle;
         if (active) setBundle(j);
+        // This bundle is passed down to the card, so it has it to display weather
       })
       .catch((e) => active && setErr(e.message))
       .finally(() => active && setLoading(false));

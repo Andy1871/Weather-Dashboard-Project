@@ -9,6 +9,7 @@ export interface CountryCardsProps {
   liveWeatherByCapital: LiveWeatherByCapital;
 }
 
+// must match the way keys are stored in liveWeatherByCapital
 function keyFromCapital(capital: string) {
   return capital.trim().toLowerCase();
 }
@@ -45,12 +46,15 @@ export default function CountryCards({
   countries,
   liveWeatherByCapital,
 }: CountryCardsProps) {
+
+  // re renders page after 60 seconds to keep date/time up to date
   const [, setTick] = React.useState(0);
   React.useEffect(() => {
     const id = setInterval(() => setTick((n) => n + 1), 60_000);
     return () => clearInterval(id);
   }, []);
 
+  // ensure only countries with LIVE data are shown
   const withLive = countries.filter(
     (c) => !!liveWeatherByCapital[keyFromCapital(c.capital)]
   );
@@ -66,6 +70,7 @@ export default function CountryCards({
     <div className="grid grid-cols-2 gap-3 py-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       {withLive.map((c) => {
         const live = liveWeatherByCapital[keyFromCapital(c.capital)];
+        // first find the live capital then find the data using that
         const now = Math.round(live!.temp);
         const hi = Math.round(live!.high);
         const lo = Math.round(live!.low);

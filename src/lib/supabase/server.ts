@@ -4,10 +4,10 @@ import { cookies } from "next/headers";
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-/** Use inside Server Components, Server Actions, and Route Handlers */
+// To use inside Server Components, Server Actions, and Route Handlers 
 export function supabaseServer() {
   return createServerClient(url, anon, {
-    // Some Next setups type cookies() as async; make these methods async to be safe.
+    
     cookies: {
       async get(name: string) {
         const store = await cookies();
