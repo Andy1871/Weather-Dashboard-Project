@@ -8,11 +8,9 @@ export async function GET(request: Request) {
   const code = url.searchParams.get("code");
   const next = url.searchParams.get("next") ?? "/";
 
-  if (!code) {
-    return NextResponse.redirect(new URL("/login", url));
-  }
+  if (!code) return NextResponse.redirect(new URL("/login", url));
 
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
   const { error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
