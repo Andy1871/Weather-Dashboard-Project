@@ -5,7 +5,7 @@ import { supabaseServer } from "@/lib/supabase/server";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 export default async function ProtectedLayout({ children }: { children: ReactNode }) {
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
