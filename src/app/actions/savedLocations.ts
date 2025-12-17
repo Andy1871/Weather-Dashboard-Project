@@ -26,7 +26,7 @@ export async function addLocation(loc: {
   lat: number;
   lon: number;
 }) {
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
@@ -40,7 +40,7 @@ export async function addLocation(loc: {
 
 // Remove a saved location
 export async function removeLocation(location_id: string) {
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
