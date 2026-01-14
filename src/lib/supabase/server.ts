@@ -12,15 +12,9 @@ export async function supabaseServer() {
       getAll() {
         return cookieStore.getAll();
       },
-      setAll(cookiesToSet) {
-        try {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options);
-          });
-        } catch {
-          // Called from a Server Component render → Next.js won't allow cookie mutation.
-          // This is OK *if* you have middleware/proxy refreshing sessions.
-        }
+      setAll() {
+        // Intentionally no-op in Server Components.
+        // Cookie updates should be handled in middleware or route handlers.
       },
     },
   });

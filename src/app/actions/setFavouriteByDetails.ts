@@ -11,13 +11,29 @@ type Payload = {
 
 export async function setFavouriteByDetails(payload: Payload) {
   const cookieStore = await cookies();
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { get: (name) => cookieStore.get(name)?.value } }
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        },
+      },
+    }
   );
 
-  const { data: { user }, error: userErr } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error: userErr,
+  } = await supabase.auth.getUser();
+
   if (userErr || !user) throw new Error("Not authenticated");
 
   // 1) unset previous favourite
@@ -28,8 +44,7 @@ export async function setFavouriteByDetails(payload: Payload) {
     .eq("is_favorite", true);
   if (unsetErr) throw unsetErr;
 
-  // 2) upsert favourite row 
-  // Try to find existing row for these coords
+  // 2) upsert favourite row
   const { data: existing, error: findErr } = await supabase
     .from("saved_locations")
     .select("location_id")
@@ -47,15 +62,13 @@ export async function setFavouriteByDetails(payload: Payload) {
       .eq("location_id", existing.location_id);
     if (updErr) throw updErr;
   } else {
-    const { error: insErr } = await supabase
-      .from("saved_locations")
-      .insert({
-        user_id: user.id,
-        display_name: payload.display_name,
-        lat: payload.lat,
-        lon: payload.lon,
-        is_favorite: true,
-      });
+    const { error: insErr } = await supabase.from("saved_locations").insert({
+      user_id: user.id,
+      display_name: payload.display_name,
+      lat: payload.lat,
+      lon: payload.lon,
+      is_favorite: true,
+    });
     if (insErr) throw insErr;
   }
 
