@@ -189,6 +189,7 @@ export default function FavouriteLocationCard() {
     setLoading(true);
     try {
       await setFavouriteByDetails({
+        location_id: r.id,
         display_name: r.displayName,
         lat: r.lat,
         lon: r.lon,

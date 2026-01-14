@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 
 type Payload = {
+  location_id: string;
   display_name: string;
   lat: number;
   lon: number;
@@ -63,6 +64,7 @@ export async function setFavouriteByDetails(payload: Payload) {
     if (updErr) throw updErr;
   } else {
     const { error: insErr } = await supabase.from("saved_locations").insert({
+      location_id: payload.location_id,
       user_id: user.id,
       display_name: payload.display_name,
       lat: payload.lat,
