@@ -13,9 +13,14 @@ export async function supabaseServer() {
         return cookieStore.getAll();
       },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) => {
-          cookieStore.set(name, value, options);
-        });
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch {
+          // Called from a Server Component render → Next.js won't allow cookie mutation.
+          // This is OK *if* you have middleware/proxy refreshing sessions.
+        }
       },
     },
   });
