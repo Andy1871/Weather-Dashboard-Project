@@ -18,6 +18,7 @@ import SearchedLocations from "./SearchedLocations";
 interface AddLocationModalProps {
   onAddLocation: (loc: SearchResult) => void;
   savedLocations: string[];
+  triggerLabel?: string;
 }
 
 type SearchResult = {
@@ -37,6 +38,7 @@ const composeDisplay = (...parts: Array<string | null | undefined>) =>
 export function AddLocationModal({
   onAddLocation,
   savedLocations,
+  triggerLabel,
 }: AddLocationModalProps) {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -120,7 +122,7 @@ export function AddLocationModal({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="cursor-pointer">
-          Add <Plus />
+          {triggerLabel ?? "Add"} <Plus />
         </Button>
       </DialogTrigger>
 

@@ -227,6 +227,7 @@ export default function FavouriteLocationCard() {
         <AddLocationModal
           onAddLocation={handleAddAsFavourite}
           savedLocations={fav ? [fav.display_name] : []}
+          triggerLabel={fav ? "Change" : "Add"}
         />
       </div>
 
@@ -254,7 +255,7 @@ export default function FavouriteLocationCard() {
 
           {!loading && !error && !fav && userId && (
             <p className="opacity-80">
-              Pick a location using the “Add location” button.
+              Pick a location using the “Add+” button.
             </p>
           )}
         </div>
