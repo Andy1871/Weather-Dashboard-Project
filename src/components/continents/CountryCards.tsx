@@ -39,14 +39,16 @@ function formatLocalTime(tz?: string | null, tzOffset?: number | null) {
       minute: "2-digit",
     });
   }
-  return new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  return new Date().toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 export default function CountryCards({
   countries,
   liveWeatherByCapital,
 }: CountryCardsProps) {
-
   // re renders page after 60 seconds to keep date/time up to date
   const [, setTick] = React.useState(0);
   React.useEffect(() => {
@@ -56,7 +58,7 @@ export default function CountryCards({
 
   // ensure only countries with LIVE data are shown
   const withLive = countries.filter(
-    (c) => !!liveWeatherByCapital[keyFromCapital(c.capital)]
+    (c) => !!liveWeatherByCapital[keyFromCapital(c.capital)],
   );
 
   const surfaceVars = {
@@ -67,7 +69,7 @@ export default function CountryCards({
   } as React.CSSProperties & Record<string, string>;
 
   return (
-    <div className="grid grid-cols-2 gap-3 py-5 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+    <div className="grid grid-cols-2 gap-3 py-5 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
       {withLive.map((c) => {
         const live = liveWeatherByCapital[keyFromCapital(c.capital)];
         // first find the live capital then find the data using that
@@ -76,7 +78,8 @@ export default function CountryCards({
         const lo = Math.round(live!.low);
         const timeStr = formatLocalTime(live!.tz, live!.tzOffset);
         const cond = titleCase(live!.description) || "—";
-        const rain = typeof live!.pop === "number" ? `${live!.pop}% chance of rain` : "—";
+        const rain =
+          typeof live!.pop === "number" ? `${live!.pop}% chance of rain` : "—";
         const conditionLine = `${cond} - ${rain}`;
 
         return (
@@ -89,16 +92,16 @@ export default function CountryCards({
             <div className="flex gap-3 items-start">
               {/* LEFT: city, country, time, condition */}
               <div className="min-w-0 flex-1">
-                <div className="truncate text-left text-lg font-semibold sm:text-xl leading-snug break-words line-clamp-2">
+                <div className="text-left text-lg tracking-wide sm:text-xl leading-snug whitespace-normal break-words">
                   {c.capital}
                 </div>
-                <div className="truncate text-left text-sm opacity-80 sm:text-base">
+                <div className="text-left text-xl tracking-wide font-bold whitespace-normal break-words">
                   {c.country}
                 </div>
                 <div className="text-left text-sm opacity-80">{timeStr}</div>
 
                 {/* Condition stays on the left, slightly separated */}
-                <div className="mt-1 text-left text-xs sm:text-sm opacity-80 leading-snug line-clamp-2">
+                <div className="mt-1 text-left text-sm sm:text-sm opacity-80 leading-snug whitespace-normal break-words">
                   {conditionLine}
                 </div>
               </div>
@@ -109,7 +112,8 @@ export default function CountryCards({
                   {Number.isFinite(now) ? `${now}°` : "—"}
                 </div>
                 <div className="mt-1 text-sm sm:text-base">
-                  {Number.isFinite(lo) ? `${lo}°` : "—"} – {Number.isFinite(hi) ? `${hi}°` : "—"}
+                  {Number.isFinite(lo) ? `${lo}°` : "—"} –{" "}
+                  {Number.isFinite(hi) ? `${hi}°` : "—"}
                 </div>
               </div>
             </div>

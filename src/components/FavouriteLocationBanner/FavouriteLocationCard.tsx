@@ -235,13 +235,13 @@ export default function FavouriteLocationCard() {
         style={surfaceVars}
         className="mt-6 rounded-2xl backdrop-blur-md border shadow-md"
       >
-        <div className="px-5 pt-5">
+        <div className="px-5">
           <h3 className="text-xl font-bold text-white">{title}</h3>
         </div>
 
-        <div className="p-4">
+        <div>
           {loading && <p className="opacity-80">Loading…</p>}
-          {error && <p className="text-red-200">{error}</p>}
+          {error && <p className="text-red-200 px-4">{error}</p>}
 
           {!loading && !error && fav && bundle && (
             <>

@@ -24,7 +24,9 @@ const dataByContinent: Record<string, CountryWeather[]> = {
 
 export default function ContinentPage() {
   const { continent } = useParams<{ continent: string }>();
-  const countries = dataByContinent[continent] || [];
+  const countries = useMemo<CountryWeather[]>(() => {
+  return dataByContinent[continent] ?? []
+}, [continent])
 
   const [searchTerm, setSearchTerm] = useState("");
   const [weatherMap, setWeatherMap] = useState<LiveWeatherByCapital>({});

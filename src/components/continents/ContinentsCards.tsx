@@ -36,7 +36,7 @@ export default function ContinentsCards() {
 
   return (
     <div className="section">
-      <div className="grid items-stretch gap-4 sm:gap-5 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid items-stretch gap-4 sm:gap-5 md:gap-6 grid-cols-2 lg:grid-cols-3">
         {continents.map((continent) => (
           <Link
             key={continent}
@@ -67,8 +67,7 @@ export default function ContinentsCards() {
                   {continent}
                 </CardTitle>
                 <CardDescription className="mt-2 text-sm leading-relaxed">
-                  Browse capital cities across {continent}. Tap a country to see
-                  live temperatures and the week ahead.
+                  Browse capital cities across {continent}. 
                 </CardDescription>
               </CardHeader>
 

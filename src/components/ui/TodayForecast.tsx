@@ -3,7 +3,7 @@ import { format, isValid as isValidDate, fromUnixTime } from "date-fns";
 interface TodayForecastItem {
   heading: string;
   info: string;
-  subInfo?: string; 
+  subInfo?: string;
 }
 
 interface TodayForecastProps {
@@ -25,25 +25,31 @@ export default function TodayForecast({ dt, data }: TodayForecastProps) {
 
   return (
     <div>
-      <div className="flex items-baseline justify-between px-4">
-        <h5 className="font-bold ml-1 mb-2">{now}</h5>
-      </div>
+      
+        <h5 className="font-semibold ml-5 mb-1 text-sm tracking-wide opacity-90">
+          {now}
+        </h5>
+      
 
       {items.length === 0 ? (
-        <p className="ml-5 text-sm opacity-70">No forecast data.</p>
+        <p className="ml-5 text-xs opacity-70">No forecast data.</p>
       ) : (
-        <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 px-4">
+        <ul className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2 px-4">
           {items.map((it, idx) => (
             <li
               key={idx}
-              className="rounded-xl border border-[color:var(--border)]/100 bg-white/0 px-4 py-3 text-center"
+              className="rounded-lg border border-[color:var(--border)]/100 bg-white/0 px-3 py-2.5 text-center"
             >
-              <div className="text-sm opacity-80">{it.heading}</div>
-              <div className="text-2xl font-bold leading-tight mt-1 text-white">
+              <div className="text-xs font-medium opacity-80">{it.heading}</div>
+
+              <div className="text-xl font-semibold leading-tight mt-0.5 text-white">
                 {it.info}
               </div>
+
               {it.subInfo && (
-                <div className="text-xs opacity-80 mt-0.5">{it.subInfo}</div>
+                <div className="text-[11px] opacity-75 mt-0.5">
+                  {it.subInfo}
+                </div>
               )}
             </li>
           ))}
@@ -51,7 +57,7 @@ export default function TodayForecast({ dt, data }: TodayForecastProps) {
       )}
 
       {!dateObj && (
-        <p className="text-sm text-red-300 ml-5 mt-2">
+        <p className="text-xs text-red-300 ml-5 mt-1.5">
           Invalid or missing date for this forecast.
         </p>
       )}

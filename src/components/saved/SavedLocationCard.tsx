@@ -68,19 +68,19 @@ export default function SavedLocationCard({
   return (
     <Card
       style={surfaceVars}
-      className="rounded-2xl backdrop-blur-md border shadow-md mb-6"
+      className="rounded-2xl backdrop-blur-md border shadow-md mb-2"
     >
-      <div className="px-5 pt-5">
+      <div className="px-5">
         <div className="flex justify-between items-center">
           <h3 className="text-xl font-bold text-white">{location}</h3>
           <ButtonWithRemove onClick={onRemove} />
         </div>
       </div>
 
-      <div className="p-4">
+      
         <TodayForecast dt={bundle.todayForecast.dt} data={todayItems as any} />
         <WeekForecast data={weekItems} />
-      </div>
+     
     </Card>
   );
 }
