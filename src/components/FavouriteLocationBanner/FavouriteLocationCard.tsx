@@ -233,24 +233,24 @@ export default function FavouriteLocationCard() {
 
       <Card
         style={surfaceVars}
-        className="mt-6 rounded-2xl backdrop-blur-md border shadow-md"
+        className="mt-6 rounded-2xl backdrop-blur-md border shadow-md mb-2"
       >
         <div className="px-5">
           <h3 className="text-xl font-bold text-white">{title}</h3>
         </div>
 
         <div>
-          {loading && <p className="opacity-80">Loading…</p>}
+          {loading && <p className="opacity-80 px-4">Loading…</p>}
           {error && <p className="text-red-200 px-4">{error}</p>}
 
           {!loading && !error && fav && bundle && (
-            <>
+            <div className="space-y-3">
               <TodayForecast
                 dt={bundle.todayForecast.dt}
                 data={todayItems as any}
               />
               <WeekForecast data={weekItems} />
-            </>
+            </div>
           )}
 
           {!loading && !error && !fav && userId && (
