@@ -3,7 +3,7 @@
 A **Next.js weather dashboard app** to view weather in locations around the world. Save favourite locations to view when you like, or compare the weather from capital cities within each continent.  
 
 
-**Live Demo:** (https://weather-dashboard-chi-gules.vercel.app/) - Free, secure login via Google 
+**Live Demo:** (https://weather-dashboard-chi-gules.vercel.app/) - Free, secure login via Google. Images below if preferred 
 
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
@@ -39,4 +39,23 @@ A **Next.js weather dashboard app** to view weather in locations around the worl
 
 ---
 
+## Images
 
+**Homepage with Favourite Location Banner**
+
+<img width="1035" height="876" alt="Homepage" src="https://github.com/user-attachments/assets/b02804ea-361e-4676-acc9-acb366d9c216" />
+
+
+**Change Favourite Location Modal with Search**
+
+<img width="486" height="550" alt="New favourite location - weather app" src="https://github.com/user-attachments/assets/cb15dffb-f579-4c25-acfd-1889113430ba" />
+
+
+**Saved Locations Page with Search Filter Used**
+
+<img width="1237" height="721" alt="Saved locations" src="https://github.com/user-attachments/assets/e5fa31d5-9c99-426e-880d-9b6c036e9987" />
+
+
+**Europe Page Snippet - all other continents available**
+
+<img width="1127" height="501" alt="Europe" src="https://github.com/user-attachments/assets/aa13b911-a4e5-448a-9ab1-c2583ba1a3e5" />
