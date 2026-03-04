@@ -125,7 +125,7 @@ export default function FavouriteLocationCard() {
     : { tz: null as string | null, tzOffset: null as number | null };
 
   const formatHM = (unix?: number) => {
-    if (!unix) return "—";
+    if (!unix) return "-";
     const base = new Date(unix * 1000);
     if (tz) {
       try {
@@ -173,7 +173,7 @@ export default function FavouriteLocationCard() {
   const todayItems = bundle ? toTodayItems(bundle, { formatHM }) : [];
   const weekItems = bundle ? toWeekItems(bundle, { weekdayFor }) : [];
 
-  // Set favourite WITHOUT adding to longer saved list 
+  // Set favourite WITHOUT adding to longer saved list
   // Reuse existing AddLocationModal - when user picks a result, write favourite directly.
   const handleAddAsFavourite = async (r: {
     id: string;
@@ -194,9 +194,9 @@ export default function FavouriteLocationCard() {
         lat: r.lat,
         lon: r.lon,
       });
-      // reflect in UI 
+      // reflect in UI
       setFav({
-        location_id: r.id, // client placeholder - DB row has its own id
+        location_id: r.id,
         display_name: r.displayName,
         lat: r.lat,
         lon: r.lon,
@@ -218,10 +218,15 @@ export default function FavouriteLocationCard() {
 
   return (
     <>
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between relative z-10">
-        <h2 className="text-3xl font-extrabold tracking-tight text-white">
-          Favourite Location
-        </h2>
+      <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between relative z-10">
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-white">
+            Favourite Location
+          </h2>
+          {fav && (
+            <p className="text-sm text-white/50 mt-0.5">{title}</p>
+          )}
+        </div>
 
         {/* Reuse modal for search/select - don't add to saved list */}
         <AddLocationModal
@@ -233,18 +238,14 @@ export default function FavouriteLocationCard() {
 
       <Card
         style={surfaceVars}
-        className="mt-6 rounded-2xl backdrop-blur-md border shadow-md mb-2"
+        className="mt-3 rounded-2xl backdrop-blur-md border shadow-md mb-2"
       >
-        <div className="px-5">
-          <h3 className="text-xl font-bold text-white">{title}</h3>
-        </div>
-
         <div>
-          {loading && <p className="opacity-80 px-4">Loading…</p>}
-          {error && <p className="text-red-200 px-4">{error}</p>}
+          {loading && <p className="opacity-60 px-4 py-3 text-sm">Loading...</p>}
+          {error && <p className="text-red-200 px-4 py-3 text-sm">{error}</p>}
 
           {!loading && !error && fav && bundle && (
-            <div className="space-y-3">
+            <div className="space-y-1">
               <TodayForecast
                 dt={bundle.todayForecast.dt}
                 data={todayItems as any}
@@ -254,8 +255,8 @@ export default function FavouriteLocationCard() {
           )}
 
           {!loading && !error && !fav && userId && (
-            <p className="opacity-80">
-              Pick a location using the “Add+” button.
+            <p className="opacity-60 px-4 py-3 text-sm">
+              Pick a location using the button above.
             </p>
           )}
         </div>

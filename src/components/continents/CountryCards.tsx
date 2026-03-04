@@ -69,51 +69,60 @@ export default function CountryCards({
   } as React.CSSProperties & Record<string, string>;
 
   return (
-    <div className="grid grid-cols-2 gap-3 py-5 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2.5 py-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
       {withLive.map((c) => {
         const live = liveWeatherByCapital[keyFromCapital(c.capital)];
-        // first find the live capital then find the data using that
         const now = Math.round(live!.temp);
         const hi = Math.round(live!.high);
         const lo = Math.round(live!.low);
         const timeStr = formatLocalTime(live!.tz, live!.tzOffset);
         const cond = titleCase(live!.description) || "—";
-        const rain =
-          typeof live!.pop === "number" ? `${live!.pop}% chance of rain` : "—";
-        const conditionLine = `${cond} - ${rain}`;
+        const popPct =
+          typeof live!.pop === "number" ? `${live!.pop}%` : null;
 
         return (
           <Card
             key={`${c.country}-${c.capital}`}
             style={surfaceVars}
-            className="rounded-xl backdrop-blur-md border shadow-sm px-3 py-3 hover:shadow-md transition"
+            className="rounded-xl backdrop-blur-md border shadow-sm px-3 py-3 hover:shadow-md hover:bg-white/[0.06] transition-all duration-150"
           >
-            {/* Two-column layout that collapses nicely */}
-            <div className="flex gap-3 items-start">
-              {/* LEFT: city, country, time, condition */}
+            <div className="flex gap-2 items-start justify-between">
+              {/* LEFT: capital, country, time, condition */}
               <div className="min-w-0 flex-1">
-                <div className="text-left text-lg tracking-wide sm:text-xl leading-snug whitespace-normal break-words">
+                <div className="text-sm font-semibold leading-snug whitespace-normal break-words text-white">
                   {c.capital}
                 </div>
-                <div className="text-left text-xl tracking-wide font-bold whitespace-normal break-words">
+                <div className="text-[11px] opacity-50 leading-snug whitespace-normal break-words mb-1.5">
                   {c.country}
                 </div>
-                <div className="text-left text-sm opacity-80">{timeStr}</div>
 
-                {/* Condition stays on the left, slightly separated */}
-                <div className="mt-1 text-left text-sm sm:text-sm opacity-80 leading-snug whitespace-normal break-words">
-                  {conditionLine}
+                <div className="text-[11px] opacity-60 tabular-nums">{timeStr}</div>
+                <div className="text-[11px] opacity-50 leading-snug whitespace-normal break-words mt-0.5">
+                  {cond}
                 </div>
+                {popPct && (
+                  <div className="flex items-center gap-0.5 mt-1 opacity-45">
+                    <svg aria-hidden viewBox="0 0 24 24" className="w-2.5 h-2.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2C9 6 6 9.5 6 13a6 6 0 1 0 12 0c0-3.5-3-7-6-11z" />
+                    </svg>
+                    <span className="text-[10px]">{popPct}</span>
+                  </div>
+                )}
               </div>
 
-              {/* RIGHT: big temp with low–high underneath */}
+              {/* RIGHT: current temp, hi/lo */}
               <div className="shrink-0 text-right">
-                <div className="leading-none text-5xl sm:text-5xl font-extrabold text-gray-100">
+                <div className="text-3xl sm:text-4xl font-extrabold leading-none text-white">
                   {Number.isFinite(now) ? `${now}°` : "—"}
                 </div>
-                <div className="mt-1 text-sm sm:text-base">
-                  {Number.isFinite(lo) ? `${lo}°` : "—"} –{" "}
-                  {Number.isFinite(hi) ? `${hi}°` : "—"}
+                <div className="mt-1 text-[11px] tabular-nums">
+                  <span className="text-white/80 font-medium">
+                    {Number.isFinite(hi) ? `${hi}°` : "—"}
+                  </span>
+                  <span className="text-white/30 mx-0.5">/</span>
+                  <span className="text-white/40">
+                    {Number.isFinite(lo) ? `${lo}°` : "—"}
+                  </span>
                 </div>
               </div>
             </div>
