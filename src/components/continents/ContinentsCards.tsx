@@ -36,7 +36,7 @@ export default function ContinentsCards() {
 
   return (
     <div className="section">
-      <div className="grid items-stretch gap-4 sm:gap-5 md:gap-6 grid-cols-2 lg:grid-cols-3">
+      <div className="grid items-stretch gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-3">
         {continents.map((continent) => (
           <Link
             key={continent}
@@ -44,36 +44,43 @@ export default function ContinentsCards() {
             className="block h-full rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
           >
             <Card
-              className="h-full min-h-[220px] rounded-2xl backdrop-blur-md border shadow-md transition-transform duration-200 ease-out hover:shadow-lg hover:-translate-y-0.5 hover:scale-[1.02] relative overflow-hidden grid grid-rows-[auto_1fr_auto]"
+              className="h-full rounded-2xl backdrop-blur-md border shadow-md transition-all duration-200 ease-out hover:shadow-lg hover:-translate-y-0.5 hover:scale-[1.015] hover:bg-white/[0.06] relative overflow-hidden grid grid-rows-[auto_1fr_auto]"
               style={surfaceVars}
             >
               <div
                 aria-hidden
                 className="absolute inset-y-0 right-0 z-0"
                 style={{
-                  width: "55%", 
+                  width: "50%",
                   backgroundImage: `url(/icons/${continentImages[continent]})`,
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "right center",
-                  backgroundSize: "contain", 
-                  opacity: 0.6,               
+                  backgroundSize: "contain",
+                  opacity: 0.45,
                   filter: "grayscale(15%) contrast(110%)",
                   pointerEvents: "none",
                 }}
               />
 
-              <CardHeader className="p-6 pt-2 relative z-10">
-                <CardTitle className="text-2xl font-extrabold tracking-tight">
-                  {continent}
-                </CardTitle>
-                <CardDescription className="mt-2 text-sm leading-relaxed">
-                  Browse capital cities across {continent}. 
+              <CardHeader className="p-5 pb-2 relative z-10">
+                <div className="flex items-center gap-2 mb-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white/50 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                  <CardTitle className="text-lg font-bold tracking-tight">
+                    {continent}
+                  </CardTitle>
+                </div>
+                <CardDescription className="text-xs leading-relaxed opacity-70 pl-[22px]">
+                  Browse capital cities across {continent}.
                 </CardDescription>
               </CardHeader>
 
-              <CardFooter className="pr-6 pt-0 pb-2 flex justify-end items-center relative z-10">
-                <p className="text-sm tracking-wide opacity-90">
-                  View {continent} <span aria-hidden>→</span>
+              <CardFooter className="px-5 pb-4 pt-2 flex justify-end items-center relative z-10">
+                <p className="text-xs tracking-wide opacity-50">
+                  View {continent} <span aria-hidden>-&gt;</span>
                 </p>
               </CardFooter>
             </Card>
